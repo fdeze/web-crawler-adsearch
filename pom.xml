@@ -8,8 +8,8 @@
 		<artifactId>web-crawler-starter-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>web-crawler-adsearch</artifactId>
-	<name>web-crawler-adsearch</name>
+	<artifactId>web-crawler-connector</artifactId>
+	<name>web-crawler-connector</name>
 
 
 	<dependencies>

@@ -26,8 +26,8 @@ public class OfferController {
 	@GetMapping(path = "/getOffers/adsearch")
 	public List<AdsearchOfferVo> getOffers() {
 
-		List<AdsearchOfferVo> lOfferList = new ArrayList();
-		List<Integer> listeCompteur = new ArrayList();
+		List<AdsearchOfferVo> lOfferList = new ArrayList<>();
+		List<Integer> listeCompteur = new ArrayList<>();
 
 		int lOfferNumber = getOfferNumber();
 		double lPageNumber = Math.ceil(lOfferNumber / 10.0) + 1;
@@ -58,7 +58,7 @@ public class OfferController {
 	}
 
 	private List<AdsearchOfferVo> getOffers(Integer pPageNumber) {
-		List<AdsearchOfferVo> lOfferList = new ArrayList();
+		List<AdsearchOfferVo> lOfferList = new ArrayList<>();
 		try {
 			String lUrl = URL + "&paged=" + pPageNumber;
 
