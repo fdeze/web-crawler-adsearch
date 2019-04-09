@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import fr.fabien.webcrawler.common.Constants;
-import fr.fabien.webcrawler.common.model.AdsearchOfferVo;
 
 @Service
 public class AdsearchOfferServiceImpl implements AdsearchOfferService {
