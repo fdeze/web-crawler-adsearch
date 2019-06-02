@@ -8,8 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import fr.fabien.contracts.adsearch.AdsearchOfferVo;
 import fr.fabien.webcrawler.internal.AdsearchOfferService;
-import fr.fabien.webcrawler.internal.AdsearchOfferVo;
 
 @EnableDiscoveryClient
 @RestController
