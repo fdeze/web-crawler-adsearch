@@ -1,4 +1,4 @@
-package fr.fabien.webcrawler;
+package fr.fabien.webcrawler.adsearch;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.fabien.contracts.adsearch.AdsearchOfferVo;
-import fr.fabien.webcrawler.internal.AdsearchOfferService;
+import fr.fabien.webcrawler.adsearch.internal.AdsearchOfferService;
 
 @EnableDiscoveryClient
 @RestController

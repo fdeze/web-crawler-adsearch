@@ -1,4 +1,4 @@
-package fr.fabien.webcrawler.internal;
+package fr.fabien.webcrawler.adsearch.internal;
 
 import java.io.IOException;
 import java.util.ArrayList;
