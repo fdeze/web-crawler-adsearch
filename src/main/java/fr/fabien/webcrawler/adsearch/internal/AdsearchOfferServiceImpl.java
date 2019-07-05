@@ -45,6 +45,10 @@ public class AdsearchOfferServiceImpl implements AdsearchOfferService {
 		return lOfferList;
 	}
 
+	/**
+	 * Get total offer's number
+	 * @return total offer's number
+	 */
 	private int getOfferNumber() {
 		try {
 			Document lDocument = Jsoup.connect(URL).userAgent(Constants.USER_AGENT).get();
@@ -56,6 +60,11 @@ public class AdsearchOfferServiceImpl implements AdsearchOfferService {
 		}
 	}
 
+	/**
+	 * Get offers presents into the current page
+	 * @param pPageNumber
+	 * @return @List<AdsearchOfferVo>
+	 */
 	private List<AdsearchOfferVo> getOffers(Integer pPageNumber) {
 		List<AdsearchOfferVo> lOfferList = new ArrayList<>();
 		try {
@@ -116,9 +125,11 @@ public class AdsearchOfferServiceImpl implements AdsearchOfferService {
 				}
 
 				lDescriptionOffreElements = lDocumentOffre.select(".page__content__main__desc__inner");	
-				String description = lDescriptionOffreElements.text();						
-				lOffer.setDescriptionOffre(description.split("Profil recherché")[0]);
-				lOffer.setDescriptionProfil(description.split("Profil recherché")[1]);
+				String description = lDescriptionOffreElements.text();	
+				
+				String[] descriptionArray = description.split("Profil recherché");
+				lOffer.setDescriptionOffre(descriptionArray[0]);
+				lOffer.setDescriptionProfil(descriptionArray[1]);
 
 				lOfferList.add(lOffer);
 			}
