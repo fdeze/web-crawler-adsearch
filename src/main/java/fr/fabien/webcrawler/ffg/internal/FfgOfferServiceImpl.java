@@ -1,4 +1,4 @@
-package fr.fabien.webcrawler.adsearch.internal;
+package fr.fabien.webcrawler.ffg.internal;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,65 +14,59 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import fr.fabien.contracts.adsearch.AdsearchOfferVo;
+import fr.fabien.contracts.ffg.FfgOfferVo;
 import fr.fabien.webcrawler.common.Constants;
 
 @Service
-public class AdsearchOfferServiceImpl implements AdsearchOfferService {
+public class FfgOfferServiceImpl implements FfgOfferService {
 
-	private Logger logger = LoggerFactory.getLogger(AdsearchOfferServiceImpl.class);
+	private Logger logger = LoggerFactory.getLogger(FfgOfferServiceImpl.class);
 
-	private static String URL = "https://adsearch.fr/nos-offres/?locations[]=69&subsidiaries[]=5&contracts[]=2";
+	private static String URL = "http://www.fantasyflightgames.fr/prochainement";
 
-	public List<AdsearchOfferVo> getOffers() {
+	public List<FfgOfferVo> getOffers() {
 
-		List<AdsearchOfferVo> lOfferList = new ArrayList<>();
-		List<Integer> listeCompteur = new ArrayList<>();
+		List<FfgOfferVo> lOfferList = new ArrayList<>();
 
-		int lOfferNumber = getOfferNumber();
-		double lPageNumber = Math.ceil(lOfferNumber / 10.0) + 1;
+		try {
+			Document lDocument = Jsoup.connect(URL).userAgent(Constants.USER_AGENT).get();
+			Elements articleElement = lDocument.select("#upcoming_container");
+			Element article = articleElement.get(0).select(".grid_image_mode").get(0);
 
-		IntStream.rangeClosed(1, (int) lPageNumber);
+			articleElement = article.select(".product_sheet_main_container");
+			logger.info("" + articleElement.size());
+			FfgOfferVo offer;
+			for (Element a : articleElement) {
+				offer = new FfgOfferVo();
+				offer.setTitre(a.select(".product_sheet_container_product_name a").text());
+				offer.setDatePublication(a.select(".product_sheet_container_add_cart").text());
+				
+				Elements elements = a.select(".product_thumbnail img");
+				offer.setUrlLogo(elements.attr("src"));	
+				lOfferList.add(offer);
 
-		for (int i = 1; i <= lPageNumber; i++) {
-			listeCompteur.add(i);
+			}
+		} catch (IOException e) {
+			logger.error("getOffers - error ", e);
 		}
 
-		listeCompteur.parallelStream().forEach(numPage -> lOfferList.addAll(getOffers(numPage)));
-
-		// sorting
-		lOfferList.sort(Comparator.comparing(AdsearchOfferVo::getPage));
 		return lOfferList;
 	}
 
 	/**
-	 * Get total offer's number
-	 * @return total offer's number
-	 */
-	private int getOfferNumber() {
-		try {
-			Document lDocument = Jsoup.connect(URL).userAgent(Constants.USER_AGENT).get();
-			Elements lOfferElements = lDocument.select(".page__content__total");
-			return Integer.parseInt(lOfferElements.eachText().get(0).substring(0, 2));
-
-		} catch (IOException e) {
-			return 0;
-		}
-	}
-
-	/**
 	 * Get offers presents into the current page
+	 * 
 	 * @param pPageNumber
-	 * @return @List<AdsearchOfferVo>
+	 * @return @List<ffgOfferVo>
 	 */
-	private List<AdsearchOfferVo> getOffers(Integer pPageNumber) {
-		List<AdsearchOfferVo> lOfferList = new ArrayList<>();
+	private List<FfgOfferVo> getOffers(Integer pPageNumber) {
+		List<FfgOfferVo> lOfferList = new ArrayList<>();
 		try {
 			String lUrl = URL + "&paged=" + pPageNumber;
 
 			Document lDocument = Jsoup.connect(lUrl).userAgent(Constants.USER_AGENT).get();
 
-			AdsearchOfferVo lOffer;
+			FfgOfferVo lOffer;
 			Elements lAElement;
 			Elements lMetaElements;
 			Elements lDateElements;
@@ -82,9 +76,9 @@ public class AdsearchOfferServiceImpl implements AdsearchOfferService {
 			for (Element article : articleElements) {
 
 				lAElement = article.select(".job__wrap .job__main a");
-				lOffer = new AdsearchOfferVo();
+				lOffer = new FfgOfferVo();
 				lurl = lAElement.attr("href");
-				lOffer.setNumeroOffreExterne("ADSEARCH_" + lurl.hashCode());
+				lOffer.setNumeroOffreExterne("ffg_" + lurl.hashCode());
 				lOffer.setNumeroOffre(String.valueOf(lurl.hashCode()));
 				lOffer.setUrl(lurl);
 				lOffer.setTitre(lAElement.select(".job__main__title").text());
@@ -119,14 +113,14 @@ public class AdsearchOfferServiceImpl implements AdsearchOfferService {
 
 					if ("Référence de l'offre".equals(libelleMeta)) {
 						lOffer.setNumeroOffre(valeurMeta);
-						lOffer.setNumeroOffreExterne("ADSEARCH_" + valeurMeta);
+						lOffer.setNumeroOffreExterne("ffg_" + valeurMeta);
 					}
 
 				}
 
-				lDescriptionOffreElements = lDocumentOffre.select(".page__content__main__desc__inner");	
-				String description = lDescriptionOffreElements.text();	
-				
+				lDescriptionOffreElements = lDocumentOffre.select(".page__content__main__desc__inner");
+				String description = lDescriptionOffreElements.text();
+
 				String[] descriptionArray = description.split("Profil recherché");
 				lOffer.setDescriptionOffre(descriptionArray[0]);
 				lOffer.setDescriptionProfil(descriptionArray[1]);

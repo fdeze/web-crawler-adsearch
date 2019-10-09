@@ -8,8 +8,8 @@
 		<artifactId>web-crawler-connector-starter-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>web-crawler-connector-adsearch</artifactId>
-	<name>web-crawler-connector-adsearch</name>
+	<artifactId>web-crawler-connector-ffg</artifactId>
+	<name>web-crawler-connector-ffg</name>
 	<dependencies>
 		<dependency>
 			<!-- jsoup HTML parser library @ https://jsoup.org/ -->

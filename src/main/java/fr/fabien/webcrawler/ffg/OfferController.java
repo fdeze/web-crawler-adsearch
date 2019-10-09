@@ -1,4 +1,4 @@
-package fr.fabien.webcrawler.adsearch;
+package fr.fabien.webcrawler.ffg;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import fr.fabien.contracts.adsearch.AdsearchOfferVo;
-import fr.fabien.webcrawler.adsearch.internal.AdsearchOfferService;
+import fr.fabien.contracts.ffg.FfgOfferVo;
+import fr.fabien.webcrawler.ffg.internal.FfgOfferService;
 
 @EnableDiscoveryClient
 @RestController
@@ -18,14 +18,14 @@ public class OfferController {
 	private Logger logger = LoggerFactory.getLogger(OfferController.class);
 
 	@Autowired
-	private AdsearchOfferService adsearchProxy;
+	private FfgOfferService ffgProxy;
 
-	@GetMapping(path = "/getOffers/adsearch")
-	public List<AdsearchOfferVo> getOffers() {
+	@GetMapping(path = "/getOffers/ffg", produces = { "application/json" })
+	public List<FfgOfferVo> getOffers() {
 
-		logger.info("Reception requête vers adsearch-microservice - getOffers");
-		List<AdsearchOfferVo> lOfferList = adsearchProxy.getOffers();
-		logger.info("Reception requête vers adsearch-microservice - getOffers - nombre résultats : {}",
+		logger.info("Reception requête vers ffg-microservice - getOffers");
+		List<FfgOfferVo> lOfferList = ffgProxy.getOffers();
+		logger.info("Reception requête vers ffg-microservice - getOffers - nombre résultats : {}",
 				lOfferList.size());
 
 		return lOfferList;

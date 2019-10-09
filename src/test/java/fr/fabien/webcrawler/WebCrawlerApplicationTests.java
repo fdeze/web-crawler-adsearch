@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
-import fr.fabien.webcrawler.adsearch.OfferController;
+import fr.fabien.webcrawler.ffg.OfferController;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -35,7 +35,7 @@ public class WebCrawlerApplicationTests {
 
 	@Test
 	public void testGetOffers() throws Exception {
-		mockMvc.perform(get("/getOffers/adsearch").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		mockMvc.perform(get("/getOffers/ffg").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
 
 }

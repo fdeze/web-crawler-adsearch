@@ -1,4 +1,4 @@
-package fr.fabien.webcrawler.adsearch;
+package fr.fabien.webcrawler.ffg;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
