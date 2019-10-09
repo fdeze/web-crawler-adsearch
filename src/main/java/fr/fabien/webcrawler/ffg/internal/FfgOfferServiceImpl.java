@@ -2,9 +2,7 @@ package fr.fabien.webcrawler.ffg.internal;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -40,9 +38,9 @@ public class FfgOfferServiceImpl implements FfgOfferService {
 				offer = new FfgOfferVo();
 				offer.setTitre(a.select(".product_sheet_container_product_name a").text());
 				offer.setDatePublication(a.select(".product_sheet_container_add_cart").text());
-				
+
 				Elements elements = a.select(".product_thumbnail img");
-				offer.setUrlLogo(elements.attr("src"));	
+				offer.setUrlLogo(elements.attr("src"));
 				lOfferList.add(offer);
 
 			}
@@ -51,88 +49,6 @@ public class FfgOfferServiceImpl implements FfgOfferService {
 		}
 
 		return lOfferList;
-	}
-
-	/**
-	 * Get offers presents into the current page
-	 * 
-	 * @param pPageNumber
-	 * @return @List<ffgOfferVo>
-	 */
-	private List<FfgOfferVo> getOffers(Integer pPageNumber) {
-		List<FfgOfferVo> lOfferList = new ArrayList<>();
-		try {
-			String lUrl = URL + "&paged=" + pPageNumber;
-
-			Document lDocument = Jsoup.connect(lUrl).userAgent(Constants.USER_AGENT).get();
-
-			FfgOfferVo lOffer;
-			Elements lAElement;
-			Elements lMetaElements;
-			Elements lDateElements;
-			Elements lDescriptionOffreElements;
-			Elements articleElements = lDocument.select(".list-offers article");
-			String lurl;
-			for (Element article : articleElements) {
-
-				lAElement = article.select(".job__wrap .job__main a");
-				lOffer = new FfgOfferVo();
-				lurl = lAElement.attr("href");
-				lOffer.setNumeroOffreExterne("ffg_" + lurl.hashCode());
-				lOffer.setNumeroOffre(String.valueOf(lurl.hashCode()));
-				lOffer.setUrl(lurl);
-				lOffer.setTitre(lAElement.select(".job__main__title").text());
-
-				lMetaElements = article.select(".job__wrap .job__metas span");
-				String metaText;
-				for (Element meta : lMetaElements) {
-					metaText = meta.select("span").text();
-					if (!"CDI".equals(metaText)) {
-						if (metaText.startsWith("Entre")) {
-							lOffer.setSalaire(metaText);
-						} else {
-							lOffer.setAdresse(metaText);
-						}
-					}
-				}
-
-				lDateElements = article.select(".job__footer .job__footer__date");
-
-				String datePublication = lDateElements.eachText().toString();
-				datePublication = datePublication.replaceAll("\\[Mise en ligne le ", "").replaceAll("]", "");
-				lOffer.setDatePublication(datePublication);
-				lOffer.setPage(pPageNumber);
-
-				Document lDocumentOffre = Jsoup.connect(lurl).userAgent(Constants.USER_AGENT).get();
-				lMetaElements = lDocumentOffre.select(".page__content__main__side__metas__item");
-				for (Element element : lMetaElements) {
-
-					Elements labelsElements = element.select(".page__content__main__side__metas__item__label");
-					String libelleMeta = labelsElements.text().trim();
-					String valeurMeta = element.select("span").get(1).html();
-
-					if ("Référence de l'offre".equals(libelleMeta)) {
-						lOffer.setNumeroOffre(valeurMeta);
-						lOffer.setNumeroOffreExterne("ffg_" + valeurMeta);
-					}
-
-				}
-
-				lDescriptionOffreElements = lDocumentOffre.select(".page__content__main__desc__inner");
-				String description = lDescriptionOffreElements.text();
-
-				String[] descriptionArray = description.split("Profil recherché");
-				lOffer.setDescriptionOffre(descriptionArray[0]);
-				lOffer.setDescriptionProfil(descriptionArray[1]);
-
-				lOfferList.add(lOffer);
-			}
-			return lOfferList;
-		} catch (IOException e) {
-			logger.error("getOffers - error ", e);
-			return lOfferList;
-		}
-
 	}
 
 }
