@@ -32,7 +32,7 @@ public class FfgOfferServiceImpl implements FfgOfferService {
 			Element article = articleElement.get(0).select(".grid_image_mode").get(0);
 
 			articleElement = article.select(".product_sheet_main_container");
-			logger.info("" + articleElement.size());
+			logger.info("nombre résultats : {}", articleElement.size());
 			FfgOfferVo offer;
 			for (Element a : articleElement) {
 				offer = new FfgOfferVo();
